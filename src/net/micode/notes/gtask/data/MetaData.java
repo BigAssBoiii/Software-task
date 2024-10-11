@@ -23,7 +23,9 @@ import net.micode.notes.tool.GTaskStringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class MetaData extends Task {
     private final static String TAG = MetaData.class.getSimpleName();
@@ -139,6 +141,7 @@ public class MetaData extends Task {
          }
          return stack.pop();
     }
+//计算运算符优先级
 public static int getValue(String operation) {
         int result = 0;
         switch (operation) {
