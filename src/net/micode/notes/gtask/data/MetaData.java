@@ -83,7 +83,7 @@ public class MetaData extends Task {
 
 }
 
-    public static List<String> parseSuffixExpression(List<String> ls) {
+    public static List<String> Trans(List<String> ls) {
         //符号栈
         Stack<String> s1 = new Stack<String>();
         //储存中间结果的List
