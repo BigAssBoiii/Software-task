@@ -23,7 +23,9 @@ import net.micode.notes.tool.GTaskStringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class MetaData extends Task {
     private final static String TAG = MetaData.class.getSimpleName();
@@ -80,3 +82,84 @@ public class MetaData extends Task {
     }
 
 }
+
+    public static List<String> parseSuffixExpression(List<String> ls) {
+        //符号栈
+        Stack<String> s1 = new Stack<String>();
+        //储存中间结果的List
+        List<String> s2 = new ArrayList<String>();
+        for (String item : ls) {
+            if (item.matches("\\d+")) {
+                s2.add(item);
+            } else if (item.equals("(")) {
+                s1.push(item);
+            } else if (item.equals(")")) {
+                //如果为有括号，则需要弹出s1中的运算符，直到遇到左括号
+                while (!s1.peek().equals("(")) {
+                    s2.add(s1.pop());
+                }
+                s1.pop();
+            } else {
+                while (s1.size() != 0 && getValue(s1.peek()) >= getValue(item)) {
+                    s2.add(s1.pop());
+                }
+                s1.push(item);
+            }
+        }
+        //将s1中剩余的运算符依次弹出并压入s2
+        while (s1.size() != 0) {
+            s2.add(s1.pop());
+        }
+        return s2;
+    }
+
+    private static int calculate(List<String> list) {
+          Stack<Integer> stack = new Stack<>();
+          for(int i=0; i<list.size(); i++){
+              String item = list.get(i);
+             if(item.matches("\\d+")){
+                 //是数字
+                 stack.push(Integer.parseInt(item));
+             }else {
+                 //是操作符，取出栈顶两个元素
+                 int num2 = stack.pop();
+                 int num1 = stack.pop();
+                 int res = 0;
+                 if(item.equals("+")){
+                     res = num1 + num2;
+                 }else if(item.equals("-")){
+                     res = num1 - num2;
+                 }else if(item.equals("*")){
+                     res = num1 * num2;
+                 }else if(item.equals("/")){
+                     res = num1 / num2;
+                 }else {
+                     throw new RuntimeException("运算符错误！");
+                 }
+                 stack.push(res);
+            }
+         }
+         return stack.pop();
+    }
+//计算运算符优先级
+public static int getValue(String operation) {
+        int result = 0;
+        switch (operation) {
+            case "+":
+                result = 1;
+                break;
+            case "-":
+                result = 1;
+                break;
+            case "*":
+                result = 2;
+                break;
+            case "/":
+                result = 2;
+                break;
+            default:
+                System.out.println("不存在该运算符");
+                break;
+        }
+        return result;
+    }
